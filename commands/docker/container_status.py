@@ -11,15 +11,3 @@ def get_container_status(container_name: str, docker_client=None):
 
     except FileNotFoundError:
         return None
-    # containers = docker_client.containers.list(all=True)
-
-    # container_info = []
-    #
-    # for container in containers:
-    #     status = container.status.split(" ")[0]
-    #     container_info.append({
-    #         "name": container.name,
-    #         "status": status
-    #     })
-
-    # return container_info

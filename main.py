@@ -3,21 +3,13 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from datetime import datetime
 
-from commands.docker.container_status import get_container_status
 from commands.telegram.custom import custom_command
 from commands.telegram.help import help_command
 from commands.telegram.start import start_command
+from commands.telegram.status import container_status_command
 
 TOKEN: Final = "Your safe token"
 BOT_USERNAME: Final = "@your_ser"
-
-
-async def container_status_command(update: Update, context: ContextTypes.DEFAULT_TYPE, container_name: str):
-    result = await get_container_status(container_name)
-
-    if result is None:
-        await update.message.reply_text("Error: Could not retrieve container status.")
-        return
 
 
 def get_current_date():
@@ -27,11 +19,16 @@ def get_current_date():
 def handle_response(text: str) -> str:
     processed: str = text.lower()
 
-    if '' in processed:
+    if 'status: x' in processed:
         return f'🟥 Container X offline - {get_current_date()}'
     if 'status: y' in processed:
         return f'🟩 Container X online - {get_current_date()}'
-    return 'ok, fine'
+    if 'Você está bem?' in processed:
+        return 'Everything cool with me! 😎'
+    if 'deploy' in processed:
+        return 'Deploy - Nova Versão Disponivel! 🚀🚀🚀'
+    else:
+        return 'Nothing to say'
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -65,7 +62,7 @@ def main():
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
     app.add_handler(CommandHandler('custom', custom_command))
-    # app.add_handler(CommandHandler('status', container_status_command(HERE OR SOMETHING))
+    app.add_handler(CommandHandler('status', container_status_command))
 
     # Messages
     app.add_handler(MessageHandler(filters.TEXT, handle_message))
