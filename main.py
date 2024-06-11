@@ -15,14 +15,6 @@ load_dotenv()
 TOKEN: Final = os.getenv('TOKEN')
 BOT_USERNAME: Final = os.getenv('BOT_USERNAME')
 
-async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if context.args:
-        container_name = context.args[0]
-        # container_name = "sharp_sutherland"
-        await get_container_status(update, context, container_name)
-    else:
-        await update.message.reply_text('Please provide a container name. Usage: /status <container_name>')
-
 
 def main():
     print('Starting bot... OK')
@@ -31,7 +23,7 @@ def main():
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
     app.add_handler(CommandHandler('custom', custom_command))
-    app.add_handler(CommandHandler('status', status_command))
+    app.add_handler(CommandHandler('status', get_container_status, has_args=True))
 
     print('Polling... OK')
     app.run_polling()
