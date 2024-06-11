@@ -10,10 +10,10 @@ def get_current_date():
     return datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
 
-async def get_container_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def get_container_status(update: Update, context: ContextTypes.DEFAULT_TYPE, container_name: str):
     docker_client: DockerClient = docker.from_env()
 
-    container_name = context.args[0]
+    # container_name = context.args[0]
     container: Model = docker_client.containers.get(container_name)
     container_state = container.attrs.get('State')
 
